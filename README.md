@@ -32,6 +32,7 @@ Then run the program in a terminal:
 | o | Change sort type (Date, Size, Seeders, etc.) |
 | O | Change sort order (Ascending/Descending) |
 | s | Perform search |
+| . | Perform last search |
 | d/Enter | Download and/or run command (depending on config) |
 | q | Quit |
 

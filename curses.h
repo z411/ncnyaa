@@ -17,6 +17,7 @@ void cycle_sort();
 void cycle_order();
 void ask_categories();
 void ask_search();
+void perform_search();
 void download_selected();
 void move_choice(int add);
 

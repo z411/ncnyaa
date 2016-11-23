@@ -110,7 +110,9 @@ key_event(int ch)
         case 'c':
             ask_categories(); break;
         case 's':
-            ask_search(); break;
+            ask_search(); perform_search(); break;
+        case '.':
+            perform_search(); break;
         case 'd':
         case 10:
             download_selected(); break;
@@ -280,6 +282,12 @@ ask_search()
     curs_set(1); echo();
     wgetnstr(win_status, search.term, sizeof(search.term)-1);
     curs_set(0); noecho();
+}
+
+void
+perform_search()
+{
+    if (!search.term) return;
     
     set_status("Getting torrent list...");
     
