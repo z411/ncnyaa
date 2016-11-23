@@ -18,17 +18,22 @@ and run the Makefile:
     make
 
 # Using
-Please check the configuration file (`config`) for customization.
+**Please check the configuration file (`config`) for customization.**
 
-Run the program in a terminal:
+Then run the program in a terminal:
 
     ./ncnyaa
 
-Use `c`, `o`, `O` and `s` keys to change search category, change sort, change order or perform search, respectively.
-
-You can use `j/k` or `Up/Down` keys to move, and the `d` or `Enter` key to download and/or run (depending on your config).
-
-Press `q` to quit.
+| Keybind | Action |
+| --- | --- |
+| j/k/Up/Down | Move up or down |
+| u/b/PgUp/PgDn | Jump up or down |
+| c | Change search category |
+| o | Change sort type (Date, Size, Seeders, etc.) |
+| O | Change sort order (Ascending/Descending) |
+| s | Perform search |
+| d/Enter | Download and/or run command (depending on config) |
+| q | Quit |
 
 # Authors/License
 Copyright (c) 2016 z411 <z411@omaera.org>
