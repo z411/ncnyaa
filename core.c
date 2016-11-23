@@ -94,10 +94,12 @@ cleanup()
 void
 strip(char * str)
 {
-    char *p, *q;
-    for (p = q = str; *p == ' '; p++);
-    while (*p) *q++ = *p++;
-    for (; *(q-1) == ' '; q--);
-    *q = '\0';
+    if (*str)
+        char *p, *q;
+        for (p = q = str; *p == ' '; p++);
+        while (*p) *q++ = *p++;
+        for (; *(q-1) == ' '; q--);
+        *q = '\0';
+    }
 }
-    
+
