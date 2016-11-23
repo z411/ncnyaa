@@ -23,10 +23,7 @@ void
 apply_config_opt(char * key, char * val)
 {
     if (!strcmp(key, "download")) {
-        if (!strcmp(val, "yes"))
-            config.download = 1;
-        else
-            config.download = 0;
+        config.download = (!strcmp(val, "yes")) ? 1 : 0;
     } else if (!strcmp(key, "category")) {
         config.category = strtol(val, NULL, 10);
     } else if (!strcmp(key, "cmd")) {
