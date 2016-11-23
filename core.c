@@ -58,12 +58,16 @@ parse_config(char * filename)
             if(line[0] == '#') continue;
 
             /* Remove endline */
-            size_t ln = strlen(line) - 1;
+            int ln = strlen(line) - 1;
             if(line[ln] == '\n')
-                line[ln] = 0;
+                line[ln--] = 0;
 
-            /* Ignore empty lines */
-            if(!strlen(line)) continue;
+	    /* Remove CR */
+	    if(line[ln] == '\r')
+                line[ln--] = 0;
+
+	    /* Ignore empty lines */
+            if(ln<0) continue;
 
             /* Parse config line */
             key = strtok(line, "=");
