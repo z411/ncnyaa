@@ -6,9 +6,9 @@ for a downloaded item.
 ![Sample](/sample.png?raw=true "ncnyaa")
 
 # Requirements
-* ncurses
-* libxml2
-* libcurl
+* ncurses (libncursesw5-dev)
+* libxml2 (libxml2-dev)
+* libcurl (libcurl-dev)
 
 # Compiling
 After you've satisfied the requirements, just simply clone this repo
