@@ -3,6 +3,8 @@ ncnyaa is a ncurses nyaa browser and downloader for your terminal.
 It can search in different categories, download torrents and/or run a shell command
 for a downloaded item.
 
+![Sample](/sample.png?raw=true "ncnyaa")
+
 # Requirements
 * ncurses
 * libxml2
