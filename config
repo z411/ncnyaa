@@ -1,0 +1,17 @@
+# ncnyaa config file
+
+# download torrent file (yes/no)
+download=yes
+
+# download path
+#path=download
+
+# run command after selecting a torrent
+#   $TITLE = torrent title
+#   $URL = remote url
+#   $FILE = local torrent (if any)
+#cmd=xdg-open $FILE
+#cmd=transmission-remote -a $URL
+
+# default category number
+category=3
