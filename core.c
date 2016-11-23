@@ -94,7 +94,7 @@ cleanup()
 void
 strip(char * str)
 {
-    if (*str)
+    if (*str) {
         char *p, *q;
         for (p = q = str; *p == ' '; p++);
         while (*p) *q++ = *p++;
