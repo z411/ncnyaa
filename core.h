@@ -51,14 +51,14 @@ struct Search
 struct TorrentItem
 {
     short i;
-    const unsigned char * title;
+    const char * title;
     wchar_t * title_w;
-    const unsigned char * link;
+    const char * link;
     int seeders;
     int leechers;
     int downloads;
     double size;
-    const char unsigned size_u[5];
+    char size_u[5];
     enum TorrentType type;
 };
 

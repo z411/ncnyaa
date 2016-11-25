@@ -106,15 +106,15 @@ struct TorrentItem
     size_t size;
     for (cur = node_ptr->children; cur; cur = cur->next) {
         if (xmlStrEqual(cur->name, (const xmlChar *)"title")) {
-            item->title = xmlNodeGetContent(cur);
-            size = mbstowcs(NULL, item->title, xmlStrlen(item->title)) + 1;
+            item->title = (const char*)xmlNodeGetContent(cur);
+            size = mbstowcs(NULL, item->title, strlen(item->title)) + 1;
             
             item->title_w = malloc(size * sizeof(wchar_t));
             mbstowcs(item->title_w, item->title, size);
         } else if (xmlStrEqual(cur->name, (const xmlChar *)"link")) {
-            item->link = xmlNodeGetContent(cur);
+            item->link = (const char*)xmlNodeGetContent(cur);
         } else if (xmlStrEqual(cur->name, (const xmlChar *)"description")) {
-            char * description = xmlNodeGetContent(cur);
+            char * description = (char*)xmlNodeGetContent(cur);
             char * p;
 
             p = strtok(description, "-");

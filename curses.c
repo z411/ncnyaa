@@ -287,8 +287,6 @@ ask_search()
 void
 perform_search()
 {
-    if (!search.term) return;
-    
     set_status("Getting torrent list...");
     
     torrent_list.size = 0;
@@ -386,8 +384,6 @@ rewrite_help(int all)
     if(search.category < 10) waddch(win_help, ' ');
     wprintw(win_help, "%d/", search.category);
     switch (search.sort) {
-        case SORT_DATE:
-            waddstr(win_help, "Date"); break;
         case SORT_SEEDERS:
             waddstr(win_help, "SE  "); break;
         case SORT_LEECHERS:
@@ -398,6 +394,9 @@ rewrite_help(int all)
             waddstr(win_help, "Size"); break;
         case SORT_NAME:
             waddstr(win_help, "Name"); break;
+        case SORT_DATE:
+        default:
+            waddstr(win_help, "Date"); break;
     }
     waddch(win_help, '/');
     waddstr(win_help, (search.order == ORDER_ASC) ? "Asc " : "Desc");
