@@ -9,39 +9,42 @@ int nyaa_categories_size = 34;
 struct Category nyaa_categories[] = {
     { "0_0",  0, "All categories" },
     { "1_0",  0, "Anime" },
-    { "1_32", 0, "Anime - AMV" },
-    { "1_37", 0, "Anime - English" },
-    { "1_38", 0, "Anime - Non-English" },
-    { "1_11", 0, "Anime - Raw" },
-    { "3_0",  0, "Audio" },
-    { "3_14", 0, "Audio - Lossless" },
-    { "3_15", 0, "Audio - Lossy" },
-    { "2_0",  0, "Literature" },
-    { "2_12", 0, "Literature - English" },
-    { "2_39", 0, "Literature - Non-English" },
-    { "2_13", 0, "Literature - Raw" },
-    { "5_0",  0, "Live" },
-    { "5_19", 0, "Live - English" },
-    { "5_22", 0, "Live - PVs" },
-    { "5_21", 0, "Live - Non-English" },
-    { "5_20", 0, "Live - Raw" },
-    { "4_0",  0, "Pictures" },
-    { "4_18", 0, "Pictures - Graphics" },
-    { "4_17", 0, "Pictures - Photos" },
+    { "1_1", 0, "Anime - AMV" },
+    { "1_2", 0, "Anime - English" },
+    { "1_3", 0, "Anime - Non-English" },
+    { "1_4", 0, "Anime - Raw" },
+    { "2_0",  0, "Audio" },
+    { "2_1", 0, "Audio - Lossless" },
+    { "2_2", 0, "Audio - Lossy" },
+    { "3_0",  0, "Literature" },
+    { "3_1", 0, "Literature - English" },
+    { "3_2", 0, "Literature - Non-English" },
+    { "3_3", 0, "Literature - Raw" },
+    { "4_0",  0, "Live" },
+    { "4_1", 0, "Live - English" },
+    { "4_2", 0, "Live - PVs" },
+    { "4_3", 0, "Live - Non-English" },
+    { "4_4", 0, "Live - Raw" },
+    { "5_0",  0, "Pictures" },
+    { "5_1", 0, "Pictures - Graphics" },
+    { "5_2", 0, "Pictures - Photos" },
     { "6_0",  0, "Software" },
-    { "6_23", 0, "Software - Applications" },
-    { "6_24", 0, "Software - Games" },
+    { "6_1", 0, "Software - Applications" },
+    { "6_2", 0, "Software - Games" },
     { "0_0",  1, "All categories" },
-    { "7_0",  1, "Art" },
-    { "7_25", 1, "Art - Anime" },
-    { "7_33", 1, "Art - Doujinshi" },
-    { "7_27", 1, "Art - Games" },
-    { "7_26", 1, "Art - Manga" },
-    { "7_28", 1, "Art - Pictures" },
-    { "8_0",  1, "Real Life" },
-    { "8_31", 1, "Real Life - Photobooks" },
-    { "8_30", 1, "Real Life - Videos" }
+    { "1_0",  1, "Art" },
+    { "1_1", 1, "Art - Anime" },
+    { "1_2", 1, "Art - Doujinshi" },
+    { "1_3", 1, "Art - Games" },
+    { "1_4", 1, "Art - Manga" },
+    { "1_5", 1, "Art - Pictures" },
+    { "2_0",  1, "Real Life" },
+    { "2_1", 1, "Real Life - Photobooks" },
+    { "2_2", 1, "Real Life - Videos" }
 };
+
+char nyaa_sorts[][10] = {"none", "id", "seeders", "leechers", "downloads", "size", "", ""};
+char nyaa_orders[][5] = {"none", "desc", "asc"};
 
 int
 parse_nyaa(struct TorrentList * torrent_list, struct Search * search)
@@ -51,15 +54,15 @@ parse_nyaa(struct TorrentList * torrent_list, struct Search * search)
 
     if (search->category >= 0 && search->category < nyaa_categories_size)
         snprintf(url, sizeof(url),
-            "https://%s.nyaa.se/?page=rss&cats=%s&sort=%d&order=%d&term=%s",
+            "https://%s.nyaa.si/?page=rss&c=%s&s=%s&o=%s&q=%s",
             (nyaa_categories[search->category].sukebe) ? "sukebei" : "www",
             nyaa_categories[search->category].id,
-            search->sort,
-            search->order,
+            nyaa_sorts[search->sort],
+            nyaa_orders[search->order],
             url_encode(search->term));
     else
         snprintf(url, sizeof(url),
-            "https://www.nyaa.se/?page=rss&term=%s",
+            "https://www.nyaa.si/?page=rss&q=%s",
             url_encode(search->term));
     
     struct MemoryChunk * mem = download_to_mem(url);
@@ -83,13 +86,15 @@ parse_nyaa(struct TorrentList * torrent_list, struct Search * search)
         
         /* Fill the torrent_list with pointers to Nyaa items */
         int i;
-        for (i = 0; i < 150 && cur != NULL; cur = cur->next)
-            if (xmlStrEqual(cur->name, (const xmlChar *)"item"))
+        for (i = 0; i < 150 && cur != NULL; cur = cur->next) {
+            if (xmlStrEqual(cur->name, (const xmlChar *)"item")) {
                 torrent_list->list[i++] = parse_nyaa_item(cur);
-        
+            }
+        }
         torrent_list->size = i;
-    } else
+    } else {
         return 0;
+    }
     
     xmlFreeDoc(doc);
     
@@ -113,34 +118,14 @@ struct TorrentItem
             mbstowcs(item->title_w, item->title, size);
         } else if (xmlStrEqual(cur->name, (const xmlChar *)"link")) {
             item->link = (const char*)xmlNodeGetContent(cur);
-        } else if (xmlStrEqual(cur->name, (const xmlChar *)"description")) {
-            char * description = (char*)xmlNodeGetContent(cur);
-            char * p;
-
-            p = strtok(description, "-");
-            sscanf(p, "%d seeder(s), %d leecher(s), %d download(s)",
-                &item->seeders,
-                &item->leechers,
-                &item->downloads);
-            
-            p = strtok(NULL, "-");
-            sscanf(p, " %lf %s", &item->size, item->size_u);
-            
-            p = strtok(NULL, "-");
-            if (p != NULL) {
-                if (strcmp(p, " Trusted") == 0)
-                    item->type = TYPE_TRUSTED;
-                else if (strcmp(p, " Remake") == 0)
-                    item->type = TYPE_REMAKE;
-                else if (strcmp(p, " A+ ") == 0)
-                    item->type = TYPE_A;
-                else
-                    item->type = TYPE_UNKNOWN;
-            } else {
-                item->type = TYPE_NORMAL;
-            }
-            
-            free(description);
+        } else if (xmlStrEqual(cur->name, (const xmlChar *)"seeders")) {
+            sscanf((char*)xmlNodeGetContent(cur), "%d", &item->seeders);
+        } else if (xmlStrEqual(cur->name, (const xmlChar *)"leechers")) {
+            sscanf((char*)xmlNodeGetContent(cur), "%d", &item->leechers);
+        } else if (xmlStrEqual(cur->name, (const xmlChar *)"downloads")) {
+            sscanf((char*)xmlNodeGetContent(cur), "%d", &item->downloads);
+        } else if (xmlStrEqual(cur->name, (const xmlChar *)"size")) {
+            sscanf((char*)xmlNodeGetContent(cur), "%lf %s", &item->size, item->size_u);
         }
     }
     

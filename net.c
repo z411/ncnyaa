@@ -18,6 +18,7 @@ struct MemoryChunk
     
     curl = curl_easy_init();
     if (curl) {
+        curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, mem_write_callback);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)mem);
         curl_easy_setopt(curl, CURLOPT_URL, url);
@@ -46,6 +47,7 @@ download_to_file(const char * url, const char * out_filename)
     {
         if ((fp = fopen(out_filename, "wb"))) {
             curl_easy_setopt(curl, CURLOPT_URL, url);
+            curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
             curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, NULL);
             curl_easy_setopt(curl, CURLOPT_WRITEDATA, fp);
             
