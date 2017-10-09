@@ -6,7 +6,8 @@
 int
 main()
 {
-    parse_config("config");
-    init_curses();
-    cleanup();
+    if(load_config("config")) {
+        init_curses();
+        cleanup();
+    }
 }

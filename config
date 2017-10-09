@@ -1,17 +1,20 @@
 # ncnyaa config file
+#
+# You can move this file to $XDG_CONFIG_HOME/ncnyaa/config
+# or $HOME/.config/ncnyaa/config
 
-# download torrent file (yes/no)
-download=yes
+# Download torrent file when selected (yes/no)
+download=no
 
-# download path
+# Torrent download path
 #path=download
 
-# run command after selecting a torrent
+# Run following command after selecting a torrent
 #   $TITLE = torrent title
 #   $URL = remote url
 #   $FILE = local torrent (if any)
 #cmd=xdg-open $FILE
-#cmd=transmission-remote -a $URL
+cmd=transmission-remote -a $URL
 
-# default category number
+# Default category number
 category=3

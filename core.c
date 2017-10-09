@@ -43,9 +43,45 @@ apply_config_opt(char * key, char * val)
     }
 }
 
-void
-parse_config(char * filename)
+int
+load_config(const char *name)
+{ 
+    /* Try current directory */
+    if(access(name, R_OK) == 0)
+        return parse_config(name);
+
+    char *env;
+    char *path;
+      
+    /* Try XDG */
+    env = getenv("XDG_CONFIG_HOME");
+    if(env) {
+        size_t sz = strlen(env) + 1 + strlen("ncnyaa") + 1 + strlen(name) + 1;
+        path = malloc(sz);
+
+        if(path && snprintf(path, sz, "%s/ncnyaa/%s", env, name) && access(path, R_OK) == 0)
+            return parse_config(path);
+    }
+
+    /* Try HOME */
+    env = getenv("HOME");
+    if(env) {
+        size_t sz = strlen(env) + 1 + strlen(".config/ncnyaa") + 1 + strlen(name) + 1;
+        path = malloc(sz);
+
+        if(path && snprintf(path, sz, "%s/.config/ncnyaa/%s", env, name) && access(path, R_OK) == 0)
+            return parse_config(path);
+    }
+
+    printf("No configuration file found.\n");
+    return 0;
+}
+
+int
+parse_config(const char * filename)
 {
+    printf("reading %s\n", filename);
+
     FILE *fp;
     char line[MAXLINE];
 
@@ -82,9 +118,10 @@ parse_config(char * filename)
         }
         
         fclose(fp);
+        return 1;
     } else {
         perror("Error reading configuration file");
-        exit(-1);
+        return 0;
     }
 }
 
