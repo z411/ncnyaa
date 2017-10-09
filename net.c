@@ -100,7 +100,7 @@ mem_write_callback(void *contents, size_t size, size_t nmemb, void *userp)
 xmlDocPtr
 parse_rss(struct MemoryChunk * mem)
 {   
-    // Use the MemoryChunk and get it into a xmlDoc using libxml
+    /* Use the MemoryChunk and get it into a xmlDoc using libxml */
     xmlDocPtr doc;
     
     if (mem->memory) {

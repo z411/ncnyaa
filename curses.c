@@ -44,7 +44,7 @@ init_curses()
         return -1;
     }
     
-    // Set default category if defined in config file
+    /* Set default category if defined in config file */
     if (config.category >= 0 && config.category <= nyaa_categories_size)
         search.category = config.category;
     
@@ -71,13 +71,13 @@ init_curses()
     wbkgd(win_help, COLOR_PAIR(1));
     refresh_windows();
     
-    // Event loop
+    /* Event loop */
     int ch;
     keypad(win_list, TRUE);
     while((ch = wgetch(win_list)) != 'q')
         key_event(ch);
     
-    // Free memory and quit
+    /* Free memory and quit */
     delwin(win_title);
     delwin(win_list);
     delwin(win_status);
@@ -331,18 +331,20 @@ move_choice(int add)
     write_item(choice);
     
     choice += add;
-    if(choice < 0) {
-        if(list_offset > 0) {
-            // Go to previous page
-            list_offset -= LIST_PAGE_SIZE;
-            if(list_offset < 0) list_offset = 0;
-            choice = LIST_PAGE_SIZE+choice;
-            write_page();
-        } else { choice = 0; }
-    } else if(list_offset+choice >= torrent_list.size) {
+
+    if(list_offset+choice <= 0)
+        choice = 0;
+    else if(list_offset+choice >= torrent_list.size)
         choice = torrent_list.size - list_offset - 1;
+
+    if(choice < 0) {
+        /* Go to previous page */
+        list_offset -= LIST_PAGE_SIZE;
+        if(list_offset < 0) list_offset = 0;
+        choice = LIST_PAGE_SIZE+choice;
+        write_page();
     } else if(choice > LIST_PAGE_SIZE-1) {
-        // Go to next page
+        /* Go to next page */
         list_offset += LIST_PAGE_SIZE;
         choice -= LIST_PAGE_SIZE;
         write_page();
